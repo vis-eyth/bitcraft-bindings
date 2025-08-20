@@ -213,6 +213,7 @@ pub mod cheat_project_site_add_all_materials_reducer;
 pub mod cheat_remove_entity_building_reducer;
 pub mod cheat_remove_entity_enemy_reducer;
 pub mod cheat_remove_entity_resource_reducer;
+pub mod cheat_remove_item_quantity_all_reducer;
 pub mod cheat_remove_item_quantity_reducer;
 pub mod cheat_set_ai_debug_state_reducer;
 pub mod cheat_set_debug_ai_state_request_type;
@@ -1988,6 +1989,10 @@ pub use cheat_remove_entity_enemy_reducer::{
 pub use cheat_remove_entity_resource_reducer::{
     cheat_remove_entity_resource, set_flags_for_cheat_remove_entity_resource,
     CheatRemoveEntityResourceCallbackId,
+};
+pub use cheat_remove_item_quantity_all_reducer::{
+    cheat_remove_item_quantity_all, set_flags_for_cheat_remove_item_quantity_all,
+    CheatRemoveItemQuantityAllCallbackId,
 };
 pub use cheat_remove_item_quantity_reducer::{
     cheat_remove_item_quantity, set_flags_for_cheat_remove_item_quantity,
@@ -4776,6 +4781,10 @@ pub enum Reducer {
         pocket_index: i32,
         quantity_to_remove: i32,
     },
+    CheatRemoveItemQuantityAll {
+        inventory_entity_id: u64,
+        pocket_index: i32,
+    },
     CheatSetAiDebugState {
         request: CheatSetDebugAiStateRequest,
     },
@@ -6379,6 +6388,7 @@ impl __sdk::Reducer for Reducer {
             Reducer::CheatRemoveEntityEnemy { .. } => "cheat_remove_entity_enemy",
             Reducer::CheatRemoveEntityResource { .. } => "cheat_remove_entity_resource",
             Reducer::CheatRemoveItemQuantity { .. } => "cheat_remove_item_quantity",
+            Reducer::CheatRemoveItemQuantityAll { .. } => "cheat_remove_item_quantity_all",
             Reducer::CheatSetAiDebugState { .. } => "cheat_set_ai_debug_state",
             Reducer::CheatSpawnLootChest { .. } => "cheat_spawn_loot_chest",
             Reducer::CheatTeleportFloat { .. } => "cheat_teleport_float",
@@ -7026,6 +7036,7 @@ impl TryFrom<__ws::ReducerCallInfo<__ws::BsatnFormat>> for Reducer {
             "cheat_remove_entity_enemy" => Ok(__sdk::parse_reducer_args::<cheat_remove_entity_enemy_reducer::CheatRemoveEntityEnemyArgs>("cheat_remove_entity_enemy", &value.args)?.into()),
             "cheat_remove_entity_resource" => Ok(__sdk::parse_reducer_args::<cheat_remove_entity_resource_reducer::CheatRemoveEntityResourceArgs>("cheat_remove_entity_resource", &value.args)?.into()),
             "cheat_remove_item_quantity" => Ok(__sdk::parse_reducer_args::<cheat_remove_item_quantity_reducer::CheatRemoveItemQuantityArgs>("cheat_remove_item_quantity", &value.args)?.into()),
+            "cheat_remove_item_quantity_all" => Ok(__sdk::parse_reducer_args::<cheat_remove_item_quantity_all_reducer::CheatRemoveItemQuantityAllArgs>("cheat_remove_item_quantity_all", &value.args)?.into()),
             "cheat_set_ai_debug_state" => Ok(__sdk::parse_reducer_args::<cheat_set_ai_debug_state_reducer::CheatSetAiDebugStateArgs>("cheat_set_ai_debug_state", &value.args)?.into()),
             "cheat_spawn_loot_chest" => Ok(__sdk::parse_reducer_args::<cheat_spawn_loot_chest_reducer::CheatSpawnLootChestArgs>("cheat_spawn_loot_chest", &value.args)?.into()),
             "cheat_teleport_float" => Ok(__sdk::parse_reducer_args::<cheat_teleport_float_reducer::CheatTeleportFloatArgs>("cheat_teleport_float", &value.args)?.into()),

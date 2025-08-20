@@ -21,6 +21,7 @@ pub mod admin_broadcast_message_msg_type;
 pub mod admin_broadcast_msg_reducer;
 pub mod admin_broadcast_table;
 pub mod admin_broadcast_type;
+pub mod admin_create_direct_chat_message_reducer;
 pub mod admin_delete_moderation_action_log_entry_reducer;
 pub mod admin_grant_shards_reducer;
 pub mod admin_log_moderation_action_reducer;
@@ -773,6 +774,8 @@ pub mod remove_favorite_friend_reducer;
 pub mod remove_friend_reducer;
 pub mod rent_state_table;
 pub mod rent_state_type;
+pub mod report_direct_message_reducer;
+pub mod report_player_direct_chat_message_type;
 pub mod reserved_name_desc_table;
 pub mod reserved_name_desc_type;
 pub mod resource_clump_desc_table;
@@ -1010,6 +1013,10 @@ pub use admin_broadcast_msg_reducer::{
 };
 pub use admin_broadcast_table::*;
 pub use admin_broadcast_type::AdminBroadcast;
+pub use admin_create_direct_chat_message_reducer::{
+    admin_create_direct_chat_message, set_flags_for_admin_create_direct_chat_message,
+    AdminCreateDirectChatMessageCallbackId,
+};
 pub use admin_delete_moderation_action_log_entry_reducer::{
     admin_delete_moderation_action_log_entry,
     set_flags_for_admin_delete_moderation_action_log_entry,
@@ -2327,6 +2334,10 @@ pub use remove_friend_reducer::{
 };
 pub use rent_state_table::*;
 pub use rent_state_type::RentState;
+pub use report_direct_message_reducer::{
+    report_direct_message, set_flags_for_report_direct_message, ReportDirectMessageCallbackId,
+};
+pub use report_player_direct_chat_message_type::ReportPlayerDirectChatMessage;
 pub use reserved_name_desc_table::*;
 pub use reserved_name_desc_type::ReservedNameDesc;
 pub use resource_clump_desc_table::*;
@@ -2793,6 +2804,12 @@ pub enum Reducer {
         region: u8,
         title: String,
         message: String,
+    },
+    AdminCreateDirectChatMessage {
+        username: String,
+        title_id: i32,
+        receiver_id: u64,
+        new_message_text: String,
     },
     AdminDeleteModerationActionLogEntry {
         entity_id: u64,
@@ -3488,6 +3505,9 @@ pub enum Reducer {
     RemoveFriend {
         player_entity_id: u64,
     },
+    ReportDirectMessage {
+        request: ReportPlayerDirectChatMessage,
+    },
     SetRoleForIdentity {
         identity: String,
         role: Role,
@@ -3776,6 +3796,7 @@ impl __sdk::Reducer for Reducer {
             Reducer::AddFavoriteFriend { .. } => "add_favorite_friend",
             Reducer::AddFriend { .. } => "add_friend",
             Reducer::AdminBroadcastMsg { .. } => "admin_broadcast_msg",
+            Reducer::AdminCreateDirectChatMessage { .. } => "admin_create_direct_chat_message",
             Reducer::AdminDeleteModerationActionLogEntry { .. } => {
                 "admin_delete_moderation_action_log_entry"
             }
@@ -4022,6 +4043,7 @@ impl __sdk::Reducer for Reducer {
             Reducer::ProcessInterModuleMessage { .. } => "process_inter_module_message",
             Reducer::RemoveFavoriteFriend { .. } => "remove_favorite_friend",
             Reducer::RemoveFriend { .. } => "remove_friend",
+            Reducer::ReportDirectMessage { .. } => "report_direct_message",
             Reducer::SetRoleForIdentity { .. } => "set_role_for_identity",
             Reducer::SetVisibility { .. } => "set_visibility",
             Reducer::SignIn { .. } => "sign_in",
@@ -4130,6 +4152,7 @@ impl TryFrom<__ws::ReducerCallInfo<__ws::BsatnFormat>> for Reducer {
                         "add_favorite_friend" => Ok(__sdk::parse_reducer_args::<add_favorite_friend_reducer::AddFavoriteFriendArgs>("add_favorite_friend", &value.args)?.into()),
             "add_friend" => Ok(__sdk::parse_reducer_args::<add_friend_reducer::AddFriendArgs>("add_friend", &value.args)?.into()),
             "admin_broadcast_msg" => Ok(__sdk::parse_reducer_args::<admin_broadcast_msg_reducer::AdminBroadcastMsgArgs>("admin_broadcast_msg", &value.args)?.into()),
+            "admin_create_direct_chat_message" => Ok(__sdk::parse_reducer_args::<admin_create_direct_chat_message_reducer::AdminCreateDirectChatMessageArgs>("admin_create_direct_chat_message", &value.args)?.into()),
             "admin_delete_moderation_action_log_entry" => Ok(__sdk::parse_reducer_args::<admin_delete_moderation_action_log_entry_reducer::AdminDeleteModerationActionLogEntryArgs>("admin_delete_moderation_action_log_entry", &value.args)?.into()),
             "admin_grant_shards" => Ok(__sdk::parse_reducer_args::<admin_grant_shards_reducer::AdminGrantShardsArgs>("admin_grant_shards", &value.args)?.into()),
             "admin_log_moderation_action" => Ok(__sdk::parse_reducer_args::<admin_log_moderation_action_reducer::AdminLogModerationActionArgs>("admin_log_moderation_action", &value.args)?.into()),
@@ -4358,6 +4381,7 @@ impl TryFrom<__ws::ReducerCallInfo<__ws::BsatnFormat>> for Reducer {
             "process_inter_module_message" => Ok(__sdk::parse_reducer_args::<process_inter_module_message_reducer::ProcessInterModuleMessageArgs>("process_inter_module_message", &value.args)?.into()),
             "remove_favorite_friend" => Ok(__sdk::parse_reducer_args::<remove_favorite_friend_reducer::RemoveFavoriteFriendArgs>("remove_favorite_friend", &value.args)?.into()),
             "remove_friend" => Ok(__sdk::parse_reducer_args::<remove_friend_reducer::RemoveFriendArgs>("remove_friend", &value.args)?.into()),
+            "report_direct_message" => Ok(__sdk::parse_reducer_args::<report_direct_message_reducer::ReportDirectMessageArgs>("report_direct_message", &value.args)?.into()),
             "set_role_for_identity" => Ok(__sdk::parse_reducer_args::<set_role_for_identity_reducer::SetRoleForIdentityArgs>("set_role_for_identity", &value.args)?.into()),
             "set_visibility" => Ok(__sdk::parse_reducer_args::<set_visibility_reducer::SetVisibilityArgs>("set_visibility", &value.args)?.into()),
             "sign_in" => Ok(__sdk::parse_reducer_args::<sign_in_reducer::SignInArgs>("sign_in", &value.args)?.into()),
