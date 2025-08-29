@@ -43,6 +43,7 @@ use std::{
 use tokio::{
     runtime::{self, Runtime},
     sync::Mutex as TokioMutex,
+    sync::mpsc::UnboundedSender as TokioSender,
 };
 
 pub(crate) type SharedCell<T> = Arc<StdMutex<T>>;
@@ -83,6 +84,9 @@ pub struct DbContextImpl<M: SpacetimeModule> {
     /// May be `None` if we connected anonymously
     /// and have not yet received the [`ws::IdentityToken`] message.
     identity: SharedCell<Option<Identity>>,
+
+    /// Send channel for all database updates
+    update_send: Option<TokioSender<M::DbUpdate>>,
 }
 
 impl<M: SpacetimeModule> Clone for DbContextImpl<M> {
@@ -99,6 +103,7 @@ impl<M: SpacetimeModule> Clone for DbContextImpl<M> {
             pending_mutations_send: self.pending_mutations_send.clone(),
             pending_mutations_recv: Arc::clone(&self.pending_mutations_recv),
             identity: Arc::clone(&self.identity),
+            update_send: self.update_send.clone(),
         }
     }
 }
@@ -224,7 +229,12 @@ impl<M: SpacetimeModule> DbContextImpl<M> {
         // so that it will be unlocked when callbacks run.
         let applied_diff = {
             let mut cache = self.cache.lock().unwrap();
-            update.apply_to_client_cache(&mut *cache)
+            if let Some(update_send) = &self.update_send {
+                update_send.send(update).unwrap();
+                Default::default()
+            } else {
+                update.apply_to_client_cache(&mut *cache)
+            }
         };
         let mut inner = self.inner.lock().unwrap();
 
@@ -747,6 +757,8 @@ pub struct DbConnectionBuilder<M: SpacetimeModule> {
     on_connect_error: Option<OnConnectErrorCallback<M>>,
     on_disconnect: Option<OnDisconnectCallback<M>>,
 
+    update_send: Option<TokioSender<M::DbUpdate>>,
+
     params: WsParams,
 }
 
@@ -793,6 +805,7 @@ impl<M: SpacetimeModule> DbConnectionBuilder<M> {
             on_connect: None,
             on_connect_error: None,
             on_disconnect: None,
+            update_send: None,
             params: <_>::default(),
         }
     }
@@ -878,6 +891,7 @@ but you must call one of them, or else the connection will never progress.
             pending_mutations_send,
             pending_mutations_recv: Arc::new(TokioMutex::new(pending_mutations_recv)),
             identity: Arc::new(StdMutex::new(None)),
+            update_send: self.update_send,
         };
 
         Ok(ctx_imp)
@@ -934,6 +948,11 @@ but you must call one of them, or else the connection will never progress.
     /// but will receive callbacks for row insertion/deletion/updates.
     pub fn with_light_mode(mut self, light: bool) -> Self {
         self.params.light = light;
+        self
+    }
+
+    pub fn with_channel(mut self, sender: TokioSender<M::DbUpdate>) -> Self {
+        self.update_send = Some(sender);
         self
     }
 
