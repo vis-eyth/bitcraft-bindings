@@ -1474,9 +1474,9 @@ dependencies = [
 
 [[package]]
 name = "spacetimedb-bindings-macro"
-version = "1.3.0"
+version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87dcccbad947dbecdb49f6c241762a78451344f04c1bdad023a3b1b5942238b2"
+checksum = "36f13fa83fb0ba006dd696860a84de2e2a5656b4f2c1e40b0868fe71d8311ebd"
 dependencies = [
  "heck 0.4.1",
  "humantime",
@@ -1488,9 +1488,9 @@ dependencies = [
 
 [[package]]
 name = "spacetimedb-client-api-messages"
-version = "1.3.0"
+version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b1ab6d47773f6e151dd226896c854894c20f3e415b5cfcf16a52ba6c349d0bdb"
+checksum = "00db0a4360592cf2cb7e9c35c82aabc61b4a8af7843b8d6cdf235781dc8d087a"
 dependencies = [
  "brotli",
  "bytes",
@@ -1512,9 +1512,9 @@ dependencies = [
 
 [[package]]
 name = "spacetimedb-data-structures"
-version = "1.3.0"
+version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9335d022d5b35f148193bfb4c0d5730cf82df1195592f46cfd7d7f68a25d777b"
+checksum = "0aeadfd999d80add79ef8eed1c4f13efcb268827ced25e24aea013119c215ded"
 dependencies = [
  "ahash",
  "crossbeam-queue",
@@ -1526,9 +1526,9 @@ dependencies = [
 
 [[package]]
 name = "spacetimedb-lib"
-version = "1.3.0"
+version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3e9b8d04af6da14e3b7cc79b4b88c1c309c994eeba6a97f298fd0cdc7f897209"
+checksum = "bc9019bda56f44383820e9e276ee1a14132c50760e6ddfb2df37e75c453e90f9"
 dependencies = [
  "anyhow",
  "bitflags 2.9.0",
@@ -1548,9 +1548,9 @@ dependencies = [
 
 [[package]]
 name = "spacetimedb-metrics"
-version = "1.3.0"
+version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "771a4830af91efa09e73c6295a588f311f26a0190af0dcbddf48025f0ad2adc5"
+checksum = "fe2453c5c13335202b0056ec4109cb92cf1c5c54a892dda060c61847b6bcb98f"
 dependencies = [
  "arrayvec",
  "itertools",
@@ -1560,9 +1560,9 @@ dependencies = [
 
 [[package]]
 name = "spacetimedb-primitives"
-version = "1.3.0"
+version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0181dc495c66138755705e573f0e0a9a7024660f207ebd1e35d0a1f839813e84"
+checksum = "9dfb8ed3d4b0453a6a0279860dc245ce451190086f785e47e67c5f913e28f618"
 dependencies = [
  "bitflags 2.9.0",
  "either",
@@ -1572,9 +1572,9 @@ dependencies = [
 
 [[package]]
 name = "spacetimedb-sats"
-version = "1.3.0"
+version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e9700ea5d62401c05633ce86d369dbc4a73ec978ac7e347ab8563626ad01fbc"
+checksum = "7820b78fde0b7a633ab5c9700cce83876ed19a94d47c24bee624399af641e34f"
 dependencies = [
  "anyhow",
  "arrayvec",
@@ -1601,7 +1601,7 @@ dependencies = [
 
 [[package]]
 name = "spacetimedb-sdk"
-version = "1.3.0"
+version = "1.3.2"
 dependencies = [
  "anymap",
  "base64 0.21.7",
